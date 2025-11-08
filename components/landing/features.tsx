@@ -51,13 +51,13 @@ export function Features() {
             return (
               <div
                 key={item.title}
-                className="group relative overflow-hidden rounded-3xl border border-border bg-card/70 p-6 backdrop-blur-sm transition hover:-translate-y-2 hover:border-primary/50"
+                className="group relative overflow-hidden rounded-3xl border border-border bg-card/70 p-6 backdrop-blur-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/30"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 opacity-0 transition group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 <div className="relative flex flex-col gap-4">
-                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-yellow-500 to-orange-600 text-primary-foreground shadow-lg shadow-primary/20">
-                    <Icon className="h-6 w-6" />
+                  <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary via-yellow-500 to-orange-600 text-primary-foreground shadow-lg shadow-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:shadow-primary">
+                    <Icon className="h-6 w-6 transition-transform duration-300 group-hover:scale-110" />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold text-foreground font-heading-landing">{item.title}</h3>

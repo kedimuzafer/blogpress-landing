@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { ArrowRight, CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useDomainCheck } from '@/hooks/useDomainCheck'
+import { cn } from '@/lib/utils'
 
 export function Hero() {
   const router = useRouter()
@@ -41,21 +42,12 @@ export function Hero() {
     <section className="relative min-h-[calc(100vh-120px)] flex items-start justify-center overflow-hidden bg-black pt-16 pb-14 font-body-landing md:pt-24">
       {/* Enhanced Modern Background */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Animated gradient orbs - More spread out */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-orange-500/35 to-orange-500/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/3 w-[600px] h-[600px] bg-gradient-to-br from-orange-600/30 to-orange-500/10 rounded-full blur-3xl" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-1/2 right-1/4 w-[450px] h-[450px] bg-gradient-to-br from-yellow-500/25 to-orange-400/5 rounded-full blur-3xl" style={{ animationDelay: '3s' }} />
-
-        {/* Additional orbs for better coverage */}
-        <div className="absolute top-1/3 right-1/6 w-[400px] h-[400px] bg-gradient-to-br from-primary/30 to-yellow-500/10 rounded-full blur-3xl" style={{ animationDelay: '2s' }} />
-        <div className="absolute bottom-1/3 left-1/6 w-[550px] h-[550px] bg-gradient-to-br from-yellow-400/25 to-orange-600/15 rounded-full blur-3xl" style={{ animationDelay: '4s' }} />
-        <div className="absolute top-1/6 left-1/3 w-[380px] h-[380px] bg-gradient-to-br from-orange-400/20 to-primary/8 rounded-full blur-3xl" style={{ animationDelay: '2.5s' }} />
-        <div className="absolute bottom-1/6 right-1/5 w-[420px] h-[420px] bg-gradient-to-br from-yellow-500/20 to-orange-500/12 rounded-full blur-3xl" style={{ animationDelay: '3.5s' }} />
-
-        {/* Extra orbs for right side (form area) */}
-        <div className="absolute top-1/5 right-1/12 w-[480px] h-[480px] bg-gradient-to-br from-orange-500/28 to-yellow-400/12 rounded-full blur-3xl" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-2/3 right-1/8 w-[350px] h-[350px] bg-gradient-to-br from-primary/25 to-orange-500/15 rounded-full blur-3xl" style={{ animationDelay: '4.5s' }} />
-        <div className="absolute bottom-1/5 right-1/10 w-[520px] h-[520px] bg-gradient-to-br from-yellow-500/22 to-orange-600/10 rounded-full blur-3xl" style={{ animationDelay: '5s' }} />
+        {/* Optimized gradient orbs - 5 strategic orbs for premium look */}
+        <div className="absolute top-[15%] left-[20%] w-[650px] h-[650px] bg-gradient-to-br from-orange-500/40 to-orange-500/10 rounded-full blur-[120px] animate-float" />
+        <div className="absolute bottom-[20%] right-[25%] w-[700px] h-[700px] bg-gradient-to-br from-orange-600/35 to-yellow-500/8 rounded-full blur-[120px] animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-[40%] right-[15%] w-[600px] h-[600px] bg-gradient-to-br from-yellow-500/30 to-orange-400/12 rounded-full blur-[120px] animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute bottom-[35%] left-[10%] w-[580px] h-[580px] bg-gradient-to-br from-primary/35 to-yellow-500/15 rounded-full blur-[120px] animate-float" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-[25%] left-[50%] w-[550px] h-[550px] bg-gradient-to-br from-orange-400/25 to-yellow-600/10 rounded-full blur-[120px] animate-float" style={{ animationDelay: '1s' }} />
 
         {/* No particles - better performance */}
 
@@ -127,7 +119,12 @@ export function Hero() {
                       value={siteName}
                       onChange={(event) => setSiteName(event.target.value)}
                       placeholder="örnek: Toy Teknik"
-                      className="h-12 rounded-xl border-white/20 bg-black/50 text-base text-white placeholder:text-white/40"
+                      className={cn(
+                        "h-12 rounded-xl border-2 bg-black/50 text-base text-white placeholder:text-white/40 transition-all duration-300",
+                        siteName.length >= 3
+                          ? "border-green-500/50 ring-2 ring-green-500/20 focus:border-green-500 focus:ring-green-500/30"
+                          : "border-white/20 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                      )}
                     />
                   </div>
 
@@ -150,7 +147,13 @@ export function Hero() {
                               .replace(/^-+|-+$/g, '')
                             setCustomSlug(sanitized)
                           }}
-                          className="h-12 rounded-xl border-white/20 bg-black/50 text-base text-white placeholder:text-white/40 font-mono"
+                          className={cn(
+                            "h-12 rounded-xl border-2 bg-black/50 text-base text-white placeholder:text-white/40 font-mono transition-all duration-300",
+                            isChecking && "border-yellow-500/50 ring-2 ring-yellow-500/20",
+                            !isChecking && isAvailable === true && "border-green-500/50 ring-2 ring-green-500/20 focus:border-green-500 focus:ring-green-500/30",
+                            !isChecking && isAvailable === false && "border-red-500/50 ring-2 ring-red-500/20 focus:border-red-500 focus:ring-red-500/30",
+                            !finalSlug && "border-white/20 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                          )}
                         />
                         {/* Real-time status indicator */}
                         {finalSlug && (
@@ -190,10 +193,10 @@ export function Hero() {
                       type="submit"
                       size="lg"
                       disabled={isChecking}
-                      className="h-12 w-full rounded-xl bg-gradient-to-br from-primary via-yellow-500 to-orange-600 px-6 text-base font-semibold text-primary-foreground shadow-primary/25 transition-all duration-300 hover:scale-[1.02] hover:from-primary hover:via-yellow-400 hover:to-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="h-12 w-full rounded-xl bg-gradient-to-br from-primary via-yellow-500 to-orange-600 px-6 text-base font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all duration-300 hover:scale-[1.03] hover:shadow-2xl hover:shadow-primary/40 hover:from-primary hover:via-yellow-400 hover:to-orange-500 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
                       Devam Et
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                     </Button>
                   </div>
                 </form>
@@ -202,7 +205,7 @@ export function Hero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-border/70 bg-white/5 text-foreground px-10 py-6 text-base font-semibold rounded-full backdrop-blur-sm w-full hover:bg-white/10"
+                className="border-border/70 bg-white/5 text-foreground px-10 py-6 text-base font-semibold rounded-full backdrop-blur-sm w-full transition-all duration-300 hover:bg-white/10 hover:scale-[1.02] hover:border-primary/30 hover:shadow-lg active:scale-[0.98]"
               >
                 <Link href="/auth/login">
                   Giriş Yap
