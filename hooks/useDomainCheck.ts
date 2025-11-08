@@ -1,13 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useDebounce } from './useDebounce';
-
-interface DomainCheckResult {
-  available: boolean;
-  slug: string;
-  domain: string;
-  suggestions: string[];
-  message: string;
-}
 
 interface UseDomainCheckReturn {
   slug: string;
@@ -19,77 +11,60 @@ interface UseDomainCheckReturn {
   error: string | null;
 }
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://api.blogpress.dev';
+// Helper function to generate slug from site name
+function generateSlug(siteName: string): string {
+  return siteName
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special chars
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+}
 
+/**
+ * Mock domain check hook - no backend required
+ * Always returns available=true for demo purposes
+ */
 export function useDomainCheck(siteName: string): UseDomainCheckReturn {
   const [slug, setSlug] = useState('');
   const [domain, setDomain] = useState('');
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [isChecking, setIsChecking] = useState(false);
-  const [message, setMessage] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
   // Debounce site name input (300ms)
   const debouncedSiteName = useDebounce(siteName, 300);
 
-  const checkDomain = useCallback(async (name: string) => {
-    if (!name || name.trim().length < 3) {
+  useEffect(() => {
+    if (!debouncedSiteName || debouncedSiteName.trim().length < 3) {
       setSlug('');
       setDomain('');
       setIsAvailable(null);
-      setMessage('');
-      setSuggestions([]);
-      setError(null);
       return;
     }
 
+    // Simulate checking
     setIsChecking(true);
-    setError(null);
 
-    try {
-      const response = await fetch(
-        `${BACKEND_URL}/api/domains/check?name=${encodeURIComponent(name)}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Domain kontrol edilemedi');
-      }
-
-      const data: DomainCheckResult = await response.json();
-
-      setSlug(data.slug);
-      setDomain(data.domain);
-      setIsAvailable(data.available);
-      setMessage(data.message);
-      setSuggestions(data.suggestions || []);
-    } catch (err) {
-      console.error('Domain check error:', err);
-      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
-      setIsAvailable(null);
-    } finally {
+    // Simulate API delay
+    const timeout = setTimeout(() => {
+      const generatedSlug = generateSlug(debouncedSiteName);
+      setSlug(generatedSlug);
+      setDomain(`${generatedSlug}.blogpress.dev`);
+      setIsAvailable(true); // Always available in demo mode
       setIsChecking(false);
-    }
-  }, []);
+    }, 500);
 
-  useEffect(() => {
-    checkDomain(debouncedSiteName);
-  }, [debouncedSiteName, checkDomain]);
+    return () => clearTimeout(timeout);
+  }, [debouncedSiteName]);
 
   return {
     slug,
     domain,
     isAvailable,
     isChecking,
-    message,
-    suggestions,
-    error,
+    message: isAvailable ? 'Domain müsait!' : '',
+    suggestions: [],
+    error: null,
   };
 }
